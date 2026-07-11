@@ -163,6 +163,9 @@ body{
 }
 .chip:hover{background:#FBF3E4; border-color:var(--terracotta);}
 
+.resolve-check{display:flex; flex-direction:column; gap:6px; padding-top:2px;}
+.resolve-check-text{font-size:11.5px; color:var(--ink-soft);}
+
 .typing{display:flex; gap:4px; padding:4px 2px;}
 .typing span{
   width:5px;height:5px;border-radius:50%;
@@ -308,8 +311,40 @@ function renderMessages(){
       chipWrap.appendChild(c);
     });
     chatArea.appendChild(chipWrap);
+  } else {
+    const last = messages[messages.length - 1];
+    if(last.role === 'bot' && last.checkResolution){
+      const wrap = document.createElement('div');
+      wrap.className = 'resolve-check';
+      wrap.innerHTML = `<div class="resolve-check-text">ご質問は解決しましたか？</div>`;
+      const btnWrap = document.createElement('div');
+      btnWrap.className = 'chips';
+      const yesBtn = document.createElement('button');
+      yesBtn.className = 'chip';
+      yesBtn.textContent = 'はい';
+      yesBtn.onclick = () => handleResolutionAnswer(true);
+      const noBtn = document.createElement('button');
+      noBtn.className = 'chip';
+      noBtn.textContent = 'いいえ';
+      noBtn.onclick = () => handleResolutionAnswer(false);
+      btnWrap.appendChild(yesBtn);
+      btnWrap.appendChild(noBtn);
+      wrap.appendChild(btnWrap);
+      chatArea.appendChild(wrap);
+    }
   }
   chatArea.scrollTop = chatArea.scrollHeight;
+}
+
+function handleResolutionAnswer(resolved){
+  const last = messages[messages.length - 1];
+  if(last) last.checkResolution = false;
+  if(resolved){
+    messages.push({role:'bot', text:'ご利用ありがとうございました！\n引き続き[Capy-noのショップ](https://capyno.official.ec/)でお買い物をお楽しみください。'});
+  } else {
+    messages.push({role:'bot', text:'かしこまりました。\n引き続きこちらのチャットでご質問くださいね。'});
+  }
+  renderMessages();
 }
 
 function showTyping(){
@@ -353,7 +388,7 @@ async function handleSend(){
   try{
     const reply = await callAI(text);
     hideTyping();
-    messages.push({role:'bot', text: reply});
+    messages.push({role:'bot', text: reply, checkResolution: true});
   }catch(e){
     hideTyping();
     messages.push({role:'bot', text: '通信エラーが発生しました。少し時間をおいて、もう一度お試しください。'});
@@ -377,7 +412,7 @@ input.addEventListener('input', () => {
 
 /* ---------- init ---------- */
 function init(){
-  messages = [{role:'bot', text:'こんにちは、Capy-noの温泉カピバラです！\nご質問があればお気軽にどうぞ。よくあるご質問はこちらから選んでいただくこともできます。'}];
+  messages = [{role:'bot', text:'こんにちは、温泉カピバラです！\nお客さまが安心してお買い物できるように案内係をしています。\nわからないことは気軽に聞いてくださいね。'}];
   renderMessages();
 }
 init();
