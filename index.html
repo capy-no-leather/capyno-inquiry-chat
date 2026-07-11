@@ -74,11 +74,11 @@ body{
 .page-sub{
   font-size:11.5px;
   color:var(--ink-soft);
-  margin:5px 0 0;
+  margin:5px 0 20px;
 }
-/* ---------- chat card (fills remaining space) ---------- */
+/* ---------- chat card (70% of the available flexible space) ---------- */
 .chat-card{
-  flex:1;
+  flex:7 1 0%;
   min-height:0;
   margin:0 12px;
   background:var(--card);
@@ -87,6 +87,10 @@ body{
   display:flex;
   flex-direction:column;
   overflow:hidden;
+}
+.chat-spacer{
+  flex:3 1 0%;
+  min-height:0;
 }
 .staff-row{
   flex-shrink:0;
@@ -231,6 +235,16 @@ body{
   line-height:1.5;
 }
 .disclaimer a{color:var(--terracotta-dark);}
+.disclaimer-note{
+  flex-shrink:0;
+  text-align:center;
+  font-size:9px;
+  color:var(--ink-soft);
+  padding:0 12px 10px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
 
 </style>
 </head>
@@ -239,9 +253,9 @@ body{
 <div class="app-shell">
   <div class="page-head">
     <div class="head-row">
-      <div class="page-title">Capy-noのお問い合わせ</div>
+      <div class="page-title">温泉カピバラのショップガイド</div>
     </div>
-    <div class="page-sub">AIが想定問答集をもとに、対話形式でお答えします</div>
+    <div class="page-sub">お買い物でわからないことにチャットでお答えします</div>
   </div>
 
   <div class="chat-card">
@@ -266,6 +280,8 @@ body{
   <div class="disclaimer">
     詳しくは<a href="https://capyno.official.ec/p/00001" target="_blank" rel="noopener">FAQページ</a>もご覧ください。
   </div>
+  <div class="disclaimer-note">このチャットでは、登録された情報をもとにAIが自動でご案内します。</div>
+  <div class="chat-spacer"></div>
 </div>
 
 <script>
