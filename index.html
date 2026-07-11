@@ -277,6 +277,11 @@ function escapeHtml(str){
   return str.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
+function renderText(str){
+  const escaped = escapeHtml(str);
+  return escaped.replace(/\[([^\[\]]+)\]\((https?:\/\/[^\s)]+)\)/g, (_, label, url) => `<a href="${url}" target="_blank" rel="noopener">${label}</a>`);
+}
+
 function renderMessages(){
   chatArea.innerHTML = '';
   chatArea.classList.toggle('is-initial', messages.length <= 1);
@@ -286,9 +291,9 @@ function renderMessages(){
     if(m.role === 'bot'){
       row.innerHTML = `
         <div class="msg-avatar"><img src="assets/character.png" alt="温泉カピバラ" class="avatar-img"></div>
-        <div class="bubble">${escapeHtml(m.text)}</div>`;
+        <div class="bubble">${renderText(m.text)}</div>`;
     } else {
-      row.innerHTML = `<div class="bubble">${escapeHtml(m.text)}</div>`;
+      row.innerHTML = `<div class="bubble">${renderText(m.text)}</div>`;
     }
     chatArea.appendChild(row);
   });
@@ -372,7 +377,7 @@ input.addEventListener('input', () => {
 
 /* ---------- init ---------- */
 function init(){
-  messages = [{role:'bot', text:'こんにちは、Capy-noの温泉カピバラです🦫\nご質問があればお気軽にどうぞ。よくあるご質問はこちらから選んでいただくこともできます。'}];
+  messages = [{role:'bot', text:'こんにちは、Capy-noの温泉カピバラです！\nご質問があればお気軽にどうぞ。よくあるご質問はこちらから選んでいただくこともできます。'}];
   renderMessages();
 }
 init();
